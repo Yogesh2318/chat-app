@@ -1,6 +1,19 @@
-import React from 'react'
+import {React,useState} from 'react'
+import{Link} from 'react-router-dom'
+import  useLogin from '../../hooks/useLogin';
 
 const Login = () => {
+ const[inputs,setInputs]=useState({
+    username:'',
+    password:''
+  })
+  const{loading,login}=useLogin();
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+     await login(inputs);
+     console.log(inputs);
+  } 
   return (
   <div className='felx flex-col items-center justify-center min-w-96 mx-auto'>
     <div className='w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg
@@ -9,24 +22,31 @@ const Login = () => {
         Login
         <span className='text-blue-500 '> ChatApp</span>
       </h1>
-       <form>
+       <form onSubmit={handleSubmit}>
         <div>
           <label className='label p-2'>
             <span className="text-base label-text">Username</span>
           </label>
-          <input type="text" className="w-full input input-bordered h-10" placeholder='Enter Username' />
+          <input type="text" className="w-full input input-bordered h-10" placeholder='Enter Username'
+          value={inputs.username}
+          onChange={(e)=>setInputs({...inputs,username:e.target.value})} />
         </div>
         <div>
         <label className='label'>
             <span className="text-base label-text">Password</span>
           </label>
-          <input type="password" className="w-full input input-bordered h-10" placeholder='Enter Password' />
+          <input type="password" className="w-full input input-bordered h-10" placeholder='Enter Password'
+          value={inputs.password}
+          onChange={(e)=>setInputs({...inputs,password:e.target.value})} />
         </div>
-        <a href="#" className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
-          {"Don't"} have an account?+
-        </a>
+        <Link to="/signup" className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'>
+          {"Don't"} have an account?
+        </Link>
         <div>
-          <button className="btn btn-block btn-sm mt-2 ">Login</button>
+          <button className="btn btn-block btn-sm mt-2 "
+          disabled={loading}>
+          {loading ? <span className='loading loading-spinner-small'></span> : 'Login'}
+          </button>
         </div>
        </form>
     </div>
